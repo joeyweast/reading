@@ -16,7 +16,7 @@
   --glow:0 0 0 1px rgba(242,200,121,.45), 0 0 34px 6px rgba(242,200,121,.20), 0 0 80px 14px rgba(242,200,121,.09);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;font-size-adjust:.5}
+html{scroll-behavior:smooth;font-size-adjust:.5;scrollbar-gutter:stable}
 body{margin:0;overflow-x:hidden;color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;
   background:radial-gradient(1100px 520px at 50% -8%,#2A3361 0%,transparent 62%),var(--wall)}
 button,select,input{font:inherit;color:inherit}
@@ -27,17 +27,18 @@ a{color:inherit}
 .mast{position:relative;background:linear-gradient(#0E1224,#141A30);padding:30px 24px 0;z-index:4;border-bottom:3px solid var(--wood2)}
 .mast-in{max-width:1240px;margin:0 auto;position:relative;z-index:2}
 .mast h1{font:400 clamp(34px,5.4vw,54px)/1 var(--disp);font-size-adjust:none;margin:0;letter-spacing:-.015em;color:#F6E7BD;text-shadow:0 0 28px rgba(242,200,121,.35)}
-.mast p.sub{margin:10px 0 0;color:var(--mute);max-width:56ch}
+.mast p.sub{margin:10px 0 0;color:var(--mute);white-space:nowrap}
+@media (max-width:700px){.mast p.sub{white-space:normal}}
 .mast-top{display:flex;gap:28px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
 .slip{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);padding:12px 18px 12px 12px;border-radius:10px;max-width:420px;cursor:pointer;text-align:left;transition:box-shadow .25s,transform .25s}
 .slip:hover{box-shadow:var(--glow);transform:translateY(-2px)}
 .slip b{font:700 16px/1.25 var(--serif);display:block}
 .slip small{display:block;color:var(--mute)}
 .slip .tag{font:600 13px var(--sans);color:var(--amber);margin-bottom:3px;display:block}
-.tabs{display:flex;gap:6px;margin:26px 0 0}
-.tabs button{background:transparent;border:0;color:var(--mute);padding:12px 18px 13px;font:600 15px var(--sans);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px}
-.tabs button[aria-selected=true]{color:var(--amber);border-bottom-color:var(--amber)}
-.tabs button:hover:not([aria-selected=true]){color:#fff}
+.tabs{display:flex;gap:8px;margin:26px 0 0;justify-content:center}
+.tabs button{position:relative;min-width:132px;background:linear-gradient(#2E3764,#222A4E);border:1px solid #3C4778;border-bottom:0;border-radius:11px 11px 0 0;color:var(--mute);padding:11px 22px 13px;font:700 16px var(--sans);cursor:pointer;margin-bottom:-3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 -3px 10px rgba(0,0,0,.35);transition:color .2s,transform .2s,box-shadow .2s}
+.tabs button[aria-selected=true]{color:var(--amber);background:linear-gradient(#3B4680,#2A3463);border-color:rgba(242,200,121,.5);padding-bottom:16px;transform:translateY(-3px);box-shadow:inset 0 1px 0 rgba(242,200,121,.35),0 -4px 14px rgba(0,0,0,.4),0 0 18px rgba(242,200,121,.12)}
+.tabs button:hover:not([aria-selected=true]){color:#fff;transform:translateY(-1px)}
 #vh{position:absolute;left:0;right:0;bottom:-74px;height:120px;width:100%;pointer-events:none;z-index:3}
 
 main{max-width:1240px;margin:0 auto;padding:62px 24px 90px}
@@ -63,6 +64,10 @@ main{max-width:1240px;margin:0 auto;padding:62px 24px 90px}
 .cv .sp{position:absolute;inset:0;background-size:1000% 1000%;background-repeat:no-repeat;z-index:1;opacity:0;transition:opacity .3s}
 .cv .sp.on{opacity:1}
 .cv .exb{position:absolute;right:0;top:0;background:#9B2F45;color:#fff;font:600 10px/1 var(--sans);padding:3px 5px;border-radius:0 0 0 4px;z-index:2}
+.cv .rvw{position:absolute;left:6px;top:6px;z-index:3;width:clamp(20px,2.3vw,30px);aspect-ratio:1.12;background:var(--amber);color:#2A2210;border-radius:6px;display:grid;place-items:center;box-shadow:0 2px 5px rgba(0,0,0,.55)}
+.cv .rvw:after{content:"";position:absolute;left:22%;bottom:-5px;border:5px solid transparent;border-top-color:var(--amber);border-bottom:0}
+.cv .rvw svg{width:62%;height:62%;fill:currentColor}
+td .cv .rvw{display:none}.big .cv .rvw{width:34px}
 .big .cv .ft{font-size:20px}.big .cv .fa{font-size:13px}
 
 /* stars */
@@ -75,7 +80,7 @@ main{max-width:1240px;margin:0 auto;padding:62px 24px 90px}
 .gd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--c)}
 
 /* bookcase */
-.case{position:relative;padding:0 38px;background:linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,.12) 8%,rgba(0,0,0,.12) 92%,rgba(0,0,0,.35)),#0C1022;box-shadow:inset 0 14px 22px -10px rgba(0,0,0,.7)}
+.case{position:relative;padding:0 38px;background:linear-gradient(90deg,rgba(0,0,0,.38),rgba(0,0,0,.08) 9%,rgba(0,0,0,.08) 91%,rgba(0,0,0,.38)),radial-gradient(780px 360px at 50% 0,rgba(84,100,184,.20),transparent 72%),repeating-linear-gradient(45deg,rgba(242,200,121,.04) 0 1px,transparent 1px 20px),repeating-linear-gradient(-45deg,rgba(242,200,121,.04) 0 1px,transparent 1px 20px),linear-gradient(180deg,#121936,#0A0E1F 60%,#0C1124);box-shadow:inset 0 14px 22px -10px rgba(0,0,0,.7)}
 .case .up{position:absolute;top:-6px;bottom:-6px;width:30px;background:linear-gradient(90deg,var(--wood3),var(--wood1) 45%,var(--wood2) 70%,var(--wood3));box-shadow:0 0 18px rgba(0,0,0,.6);z-index:1}
 .case .up.l{left:-2px;border-radius:5px 0 0 5px}.case .up.r{right:-2px;border-radius:0 5px 5px 0}
 .case .cap{position:absolute;left:-12px;right:-12px;top:-14px;height:16px;background:linear-gradient(var(--wood1),var(--wood2) 60%,var(--wood3));border-radius:5px;box-shadow:0 6px 12px rgba(0,0,0,.5);z-index:2}
@@ -117,15 +122,23 @@ td.t{font:700 14px/1.3 var(--serif);min-width:220px}
 td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* stats */
-.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:6px}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:0}
 .sgrid .span4{grid-column:1/-1}
-.kpis{margin:0 0 22px}
+.kpis{margin:0 0 22px;grid-template-columns:repeat(5,1fr);gap:16px}.kpis .sc.k b{font-size:clamp(28px,3.5vw,44px)}.kpis .sc.k{padding:24px 10px}.sgrid>.kpis{grid-column:1/-1;margin:0}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.kpis .sc:last-child{grid-column:1/-1}}
 .sgrid .span2{grid-column:span 2}
 .sc{position:relative;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:22px 24px 24px;transition:box-shadow .3s,transform .3s,border-color .3s}
 .sc:hover{box-shadow:var(--glow);transform:translateY(-3px);border-color:rgba(242,200,121,.5)}
 .sc.k{text-align:center;padding:26px 16px}
 .sc.k b{display:block;font:800 clamp(34px,4.2vw,50px)/1.05 var(--serif);color:var(--amber);font-variant-numeric:lining-nums tabular-nums}
 .sc.k span{color:var(--mute);font-size:14px}
+.sc.k b .ks{display:inline-block;height:.7em;width:auto;aspect-ratio:24/23;margin-left:.12em;vertical-align:baseline;fill:var(--amber)}
+.sc h2+.prose{margin-top:16px}.prose{max-width:none;color:#DDE0F0;font:400 18.5px/1.65 var(--serif)}.prose p{margin:0 0 14px}.prose b{color:var(--amber);font-weight:700}
+.prose.pa{columns:1;max-width:78ch}.prose.pb{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}.pcol h3{font:400 24px/1.1 var(--disp);color:#F6E7BD;margin:0 0 8px}
+.pq{margin:4px 0 20px;font:400 clamp(26px,3.2vw,38px)/1.2 var(--disp);color:#F6E7BD;border-left:3px solid var(--amber);padding-left:20px;max-width:30ch}
+.pcols{columns:2;column-gap:44px}.pcols p{break-inside:avoid}
+.pvs{display:flex;gap:6px;margin:0 0 16px}.pvs button{background:#222A4E;border:1px solid #3C4778;color:var(--mute);border-radius:8px;padding:4px 12px;font:600 14px var(--sans);cursor:pointer}.pvs button.on{color:var(--amber);border-color:rgba(242,200,121,.6)}
+@media (max-width:900px){.prose.pb{grid-template-columns:1fr}.pcols{columns:1}}
 .sc h2{font:700 20px/1.2 var(--serif);margin:0 0 4px;color:#F6E7BD}
 .sc p.cap{margin:0 0 18px;color:var(--mute);font-size:13.5px;max-width:68ch}
 .hb{display:grid;grid-template-columns:minmax(100px,230px) 1fr 40px;gap:9px 12px;align-items:center;font-size:14px}
@@ -189,8 +202,8 @@ svg text{font:12px var(--sans);fill:var(--mute)}
   <div class="bar" id="bar">
     <input type="search" id="q" placeholder="Search title, author, series, review" aria-label="Search">
     <select id="genre" aria-label="Genre"></select>
-    <select id="aud" aria-label="Audience">
-      <option value="">All ages</option><option>Adult</option><option>Young Adult</option><option>Middle Grade</option>
+    <select id="aud" aria-label="Review filter">
+      <option value="">All</option><option value="yes">Reviewed</option><option value="no">Not reviewed</option>
     </select>
     <select id="shelf" aria-label="Shelf">
       <option value="read">Read</option><option value="to-read">Want to read</option><option value="did-not-finish">Did not finish</option><option value="all">All shelves</option>
@@ -202,7 +215,6 @@ svg text{font:12px var(--sans);fill:var(--mute)}
     <div class="seg" id="views" role="group" aria-label="View">
       <button data-v="grid" aria-pressed="true">Shelves</button><button data-v="list" aria-pressed="false">List</button><button data-v="table" aria-pressed="false">Table</button>
     </div>
-    <label class="chk"><input type="checkbox" id="noex"> Hide explicit</label>
   </div>
 
   <section id="shelves">
@@ -226,7 +238,7 @@ const PPH = 35; // narrated pages per hour, used only until real Audible runtime
 const GC = {"High Fantasy":"#3B4F6B","Fantasy Adventure":"#7A5C2E","Romantasy":"#8A3F55","Contemporary Fantasy":"#5B4A78","Sci-Fi":"#2E6670","Dystopian":"#5A5F63","LitRPG":"#8F4B2A","Mystery":"#3F3F58","Horror":"#6E2A2A","Contemporary Fiction":"#4F6B52","Classics":"#6B5A3C","Nonfiction":"#46606E","Poetry":"#805B7A","Mythological Retellings":"#85692B","Romance":"#9B3D4A"};
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const S = {view:'grid', sort:'recent', dir:1, q:'', genre:'', aud:'', shelf:'read', noex:false};
+const S = {view:'grid', sort:'recent', dir:1, q:'', genre:'', aud:'', shelf:'read'};
 const byId = Object.fromEntries(BOOKS.map(b=>[b.id,b]));
 const fmtDate = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return new Date(+y,+m-1,+dd||1).toLocaleDateString('en-US',{month:'short',day:dd?'numeric':undefined,year:'numeric'}); };
 
@@ -275,7 +287,7 @@ const OWN = new Set(['667','1226','1381','1420','1885','2657','3636','4381','510
 function coverHTML(b){
   const c = GC[b.g]||'#3B4F6B', e = EX[b.id];
   const sp = OWN.has(String(b.id)) ? `<span class="sp" data-own="${b.id}" style="background-size:cover;background-position:center"></span>` : e && e[0]>=0 ? `<span class="sp" data-sheet="${e[0]}" style="background-position:${(e[1]%COLS)/(COLS-1)*100}% ${Math.floor(e[1]/COLS)/(COLS-1)*100}%"></span>` : '';
-  return `<div class="cv" style="--c:${c}"><div class="fb"><span class="ft">${esc(b.t)}</span><span class="fa">${esc(b.a)}</span></div>${sp}${b.x?'<span class="exb">Explicit</span>':''}</div>`;
+  return `<div class="cv" style="--c:${c}"><div class="fb"><span class="ft">${esc(b.t)}</span><span class="fa">${esc(b.a)}</span></div>${sp}${b.x?'<span class="exb">Explicit</span>':''}${b.rv&&b.rv.trim()?'<span class="rvw" title="I wrote a review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h10v2H4z"/></svg></span>':''}</div>`;
 }
 const io = 'IntersectionObserver' in window ? new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ io.unobserve(e.target); loadSprite(e.target);} }),{rootMargin:'500px'}) : null;
 function loadSprite(sp){
@@ -298,10 +310,10 @@ function hideTip(){ tip.style.display='none'; }
 function visible(){
   const q = S.q.trim().toLowerCase();
   return BOOKS.filter(b=>{
-    if(S.noex && b.x) return false;
     if(S.shelf!=='all' && b.sh!==S.shelf) return false;
     if(S.genre && b.g!==S.genre) return false;
-    if(S.aud && b.au!==S.aud) return false;
+    if(S.aud==='yes' && !(b.rv&&b.rv.trim())) return false;
+    if(S.aud==='no' && b.rv&&b.rv.trim()) return false;
     if(q && !(b.t+' '+b.a+' '+b.se+' '+b.rv).toLowerCase().includes(q)) return false;
     return true;
   });
@@ -362,10 +374,12 @@ function hbars(rows){ const max=Math.max(...rows.map(r=>r[1]),1);
   return '<div class="hb">'+rows.map(([l,v])=>`<div class="r" data-t="${esc(l+': '+v)}"><div class="lab" title="${esc(l)}">${esc(l)}</div><div class="trk"><div class="bar2" style="width:${v/max*100}%"></div></div><div class="v">${v}</div></div>`).join('')+'</div>'; }
 function kpiCards(rd,rated,pages){
   const avg = rated.reduce((s,b)=>s+b.r,0)/(rated.length||1);
+  const authors = new Set(rd.map(b=>b.a)).size;
   return `<div class="sc k"><b>${rd.length.toLocaleString()}</b><span>books read</span></div>
+    <div class="sc k"><b>${authors.toLocaleString()}</b><span>authors read</span></div>
     <div class="sc k"><b>${pages.toLocaleString()}</b><span>pages read</span></div>
     <div class="sc k"><b>${Math.round(pages/PPH).toLocaleString()}</b><span>hours, estimated from pages</span></div>
-    <div class="sc k"><b>${avg.toFixed(2)}</b><span>average rating, ${rated.length} rated</span></div>`;
+    <div class="sc k"><b>${avg.toFixed(2)}<svg class="ks" viewBox="0 0 24 23" aria-hidden="true"><path d="M12 .5l3.4 7.2 7.8 1-5.7 5.4 1.5 7.8L12 18l-7 3.9 1.5-7.8L.8 8.7l7.8-1z"/></svg></b><span>average rating, ${rated.length} rated</span></div>`;
 }
 function renderKpis(){
   const rd = BOOKS.filter(b=>b.sh==='read'), rated = rd.filter(b=>b.r>0), pages = rd.reduce((s,b)=>s+b.p,0);
@@ -399,22 +413,31 @@ function renderStats(){
   const five=rated.filter(b=>b.r>=5).length, four=rated.filter(b=>b.r>=4).length;
   const longest=rd.filter(b=>!/boxed set|omnibus|collection|complete|series$|trilogy/i.test(b.t)).reduce((m,b)=>b.p>m.p?b:m,{p:0,t:''});
   const modern=rd.filter(b=>b.y>=2000).length, withY=rd.filter(b=>b.y).length;
-  const profile=`<ul class="prof">
-    <li><b>${pct(fanN,rd.length)}%</b> of my shelf is fantasy in one form or another, and ${esc(topFan?topFan[0]:'fantasy')} leads the way.</li>
-    <li><b>${esc(au[0]?au[0][0]:'')}</b> is my most-read author, with ${au[0]?au[0][1]:0} books.</li>
-    <li>A generous grader: <b>${pct(five,rated.length)}%</b> of rated books earned five stars and <b>${pct(four,rated.length)}%</b> earned four or more.</li>
-    <li><b>${pct(rd.filter(b=>b.se).length,rd.length)}%</b> of what I read belongs to a series. The longest single read was ${esc(longest.t||'')} at ${longest.p||0} pages.</li>
-    <li><b>${pct(modern,withY)}%</b> of the books were published in 2000 or later.</li>
-  </ul>`;
+  const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+  const about=p=>{const m={50:'half',33:'a third',67:'two in three',75:'three in four',25:'a quarter'};let r=null;for(const k in m) if(Math.abs(p-k)<=3) r=m[k]; return r?'about '+r:p+'%';};
+  const gen=Object.entries(count(rd,b=>b.g)).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
+  const fanP=pct(fanN,rd.length), serP=pct(rd.filter(b=>b.se).length,rd.length), fiveP=pct(five,rated.length), fourP=pct(four,rated.length), modP=pct(modern,withY), oneN=rated.filter(b=>b.r<=1.5).length;
+  const ac=count(rd,b=>b.au), adP=pct(ac['Adult']||0,rd.length), mgP=pct(ac['Middle Grade']||0,rd.length), yaP=pct(ac['Young Adult']||0,rd.length);
+  const rec=rd.filter(b=>b.dr&&+b.dr.slice(0,4)>=2020), recRated=rec.filter(b=>b.r>0);
+  const rc=(arr,f)=>Object.entries(count(arr,f)).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
+  const list=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+  const rg=rc(rec,b=>b.g), ra=rc(rec,b=>b.a).slice(0,4).map(esc), rs=rc(rec.filter(b=>b.se),b=>b.se).slice(0,4).map(esc);
+  const rr2=rc(recRated,b=>Math.round(b.r)), recSer=pct(rec.filter(b=>b.se).length,rec.length), recNew=pct(rec.filter(b=>b.y>=2020).length,rec.length);
+  const med=a=>{const x=a.filter(Boolean).sort((p,q)=>p-q);return x[Math.floor(x.length/2)]||0;};
+  const pages50=Math.round(med(rec.map(b=>b.p))/50)*50, lowest=recRated.filter(b=>b.r<=2).length;
+  const profile=`<div class="prose pb"><div class="pcol"><h3>What I read</h3><p>Mostly big, plot-driven fantasy. ${rg[0]} leads by a wide margin, with ${rg[1]} and ${rg[2]} next, and a steady mix of ${list(rg.slice(3,6))} around the edges. ${esc(ra[0])} is the author I keep coming back to, followed by ${list(ra.slice(1))}.</p></div>
+    <div class="pcol"><h3>How I read</h3><p>I commit to long series and see them through to the end. ${list(rs)} have taken up a big share of my time, and ${recSer>=60?'most':'plenty'} of what I pick up is a book in something bigger. The typical book runs about ${pages50} pages, and ${about(recNew)} of what I read is fairly new.</p></div>
+    <div class="pcol"><h3>How I rate</h3><p>Generous, but not indiscriminate. ${['Zero','One','Two','Three','Four','Five'][rr2[0]]} stars is my most common rating, with ${['zero','one','two','three','four','five'][rr2[1]]} close behind, and ${lowest?'the occasional book falls to two or below':'nothing really crashes and burns'}.</p></div></div>`;
   $('#stats').innerHTML = `
   <div class="sgrid">
-    ${kpiCards(rd,rated,pages)}
+    <div class="sgrid kpis">${kpiCards(rd,rated,pages)}</div>
     <div class="sc span4"><h2>Books per year</h2><p class="cap">Counted from finish dates, 2017 on. Only ${dated} of ${rd.length} books carry a finish date; earlier ones were added in bulk, so the true pace is higher than this chart shows.</p>${svg}</div>
+    <div class="sc span4"><h2>Reader profile</h2>${profile}</div>
     <div class="sc span2"><h2>Genres</h2><p class="cap">What the shelves are made of.</p>${hbars(gg)}</div>
     <div class="sc span2"><h2>Most-read authors</h2><p class="cap">By number of books.</p>${hbars(au)}</div>
     <div class="sc span2"><h2>Ratings</h2><p class="cap">How I score what I finish.</p>${hbars(rrows)}</div>
     <div class="sc span2"><h2>Publication era</h2><p class="cap">When the books were first published.</p>${hbars(erows)}</div>
-    <div class="sc span2"><h2>Reader profile</h2><p class="cap">What the numbers say about me.</p>${profile}</div>
+    <div class="sc span2"><h2>Who the books are for</h2><p class="cap">Audience each book was written for.</p>${hbars(Object.entries(ac).sort((a,b)=>b[1]-a[1]))}</div>
     <div class="sc span2"><h2>Biggest series</h2><p class="cap">Series I've read the most books from.</p>${hbars(srows)}</div>
   </div>
   <p class="note">Listening time is an estimate at about ${PPH} pages per narrated hour${noPages?`; ${noPages} books have no page count and add nothing`:''}. It will be replaced with real Audible runtimes where they are available.</p>`;
@@ -432,7 +455,6 @@ function init(){
   $('#q').oninput = e=>{ S.q=e.target.value; render(); };
   ['genre','aud','shelf'].forEach(k=>$('#'+k).onchange=e=>{ S[k]=e.target.value; render(); });
   $('#sort').onchange = e=>{ S.sort=e.target.value; S.dir=1; render(); };
-  $('#noex').onchange = e=>{ S.noex=e.target.checked; render(); };
   $('#views').onclick = e=>{ const v=e.target.dataset.v; if(!v) return; S.view=v; document.querySelectorAll('#views button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v)); render(); };
   const out=$('#out');
   out.onclick = e=>{
