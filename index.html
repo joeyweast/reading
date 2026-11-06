@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Joey's Reading Room</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 :root{
   --wall:#161B2E; --wall2:#10152A; --card:#242C4D; --card2:#2C3560; --line:#38426E;
   --ink:#EDE6D6; --mute:#A5ABC6; --amber:#F2C879; --amber2:#D9A441;
   --wood1:#9A6C44; --wood2:#6E482B; --wood3:#43291A;
   --leaf1:#2F6B42; --leaf2:#4C9160; --leaf3:#7DBB82; --pink:#E7A3B4;
-  --serif:"Fraunces",Georgia,serif; --sans:"Figtree",system-ui,sans-serif;
+  --serif:"Crimson Pro",Georgia,serif; --sans:"Crimson Pro",Georgia,serif; --disp:"DM Serif Display",Georgia,serif;
   --glow:0 0 0 1px rgba(242,200,121,.45), 0 0 34px 6px rgba(242,200,121,.20), 0 0 80px 14px rgba(242,200,121,.09);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;font-size-adjust:.5}
 body{margin:0;overflow-x:hidden;color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;
   background:radial-gradient(1100px 520px at 50% -8%,#2A3361 0%,transparent 62%),var(--wall)}
 button,select,input{font:inherit;color:inherit}
@@ -26,7 +26,7 @@ a{color:inherit}
 /* masthead */
 .mast{position:relative;background:linear-gradient(#0E1224,#141A30);padding:30px 24px 0;z-index:4;border-bottom:3px solid var(--wood2)}
 .mast-in{max-width:1240px;margin:0 auto;position:relative;z-index:2}
-.mast h1{font:700 clamp(34px,5.4vw,54px)/1 var(--serif);margin:0;letter-spacing:-.015em;color:#F6E7BD;text-shadow:0 0 28px rgba(242,200,121,.35)}
+.mast h1{font:400 clamp(34px,5.4vw,54px)/1 var(--disp);font-size-adjust:none;margin:0;letter-spacing:-.015em;color:#F6E7BD;text-shadow:0 0 28px rgba(242,200,121,.35)}
 .mast p.sub{margin:10px 0 0;color:var(--mute);max-width:56ch}
 .mast-top{display:flex;gap:28px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
 .slip{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);padding:12px 18px 12px 12px;border-radius:10px;max-width:420px;cursor:pointer;text-align:left;transition:box-shadow .25s,transform .25s}
@@ -124,7 +124,7 @@ td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sc{position:relative;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:22px 24px 24px;transition:box-shadow .3s,transform .3s,border-color .3s}
 .sc:hover{box-shadow:var(--glow);transform:translateY(-3px);border-color:rgba(242,200,121,.5)}
 .sc.k{text-align:center;padding:26px 16px}
-.sc.k b{display:block;font:700 clamp(32px,4vw,46px)/1.05 var(--serif);color:var(--amber);font-variant-numeric:lining-nums tabular-nums}
+.sc.k b{display:block;font:800 clamp(34px,4.2vw,50px)/1.05 var(--serif);color:var(--amber);font-variant-numeric:lining-nums tabular-nums}
 .sc.k span{color:var(--mute);font-size:14px}
 .sc h2{font:700 20px/1.2 var(--serif);margin:0 0 4px;color:#F6E7BD}
 .sc p.cap{margin:0 0 18px;color:var(--mute);font-size:13.5px;max-width:68ch}
