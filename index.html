@@ -270,18 +270,19 @@ function updateVines(){
 /* ---------- covers: baked into sprite sheets (covers/sheet-N.jpg), summaries baked into data/extra.json ---------- */
 let EX = {};
 const COLS = 10;
+const OWN = new Set(['10572','10664113','10803121','10852065','11350430','11985631','12287209','13496','13497','13578175','15724396','17306293','17855756','18635622','21411388','22823333','22878967','228928465','247756858','33357675','34002132','39943621','41564599','50156751','54870256','56377548','57443696','60648548','61755703','62291','7235533']); /* covers/<id>.webp: individual cover files, take priority over the sprite sheets */
 function coverHTML(b){
   const c = GC[b.g]||'#3B4F6B', e = EX[b.id];
-  const sp = e && e[0]>=0 ? `<span class="sp" data-sheet="${e[0]}" style="background-position:${(e[1]%COLS)/(COLS-1)*100}% ${Math.floor(e[1]/COLS)/(COLS-1)*100}%"></span>` : '';
+  const sp = OWN.has(String(b.id)) ? `<span class="sp" data-own="${b.id}" style="background-size:cover;background-position:center"></span>` : e && e[0]>=0 ? `<span class="sp" data-sheet="${e[0]}" style="background-position:${(e[1]%COLS)/(COLS-1)*100}% ${Math.floor(e[1]/COLS)/(COLS-1)*100}%"></span>` : '';
   return `<div class="cv" style="--c:${c}"><div class="fb"><span class="ft">${esc(b.t)}</span><span class="fa">${esc(b.a)}</span></div>${sp}${b.x?'<span class="exb">Explicit</span>':''}</div>`;
 }
 const io = 'IntersectionObserver' in window ? new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ io.unobserve(e.target); loadSprite(e.target);} }),{rootMargin:'500px'}) : null;
 function loadSprite(sp){
-  const url = `covers/sheet-${sp.dataset.sheet}.jpg`, im = new Image();
+  const url = sp.dataset.own ? `covers/${sp.dataset.own}.webp` : `covers/sheet-${sp.dataset.sheet}.jpg`, im = new Image();
   im.onload = ()=>{ sp.style.backgroundImage=`url(${url})`; sp.classList.add('on'); };
   im.src = url;
 }
-function observeCovers(root){ root.querySelectorAll('.sp[data-sheet]').forEach(i=>{ io?io.observe(i):loadSprite(i); }); }
+function observeCovers(root){ root.querySelectorAll('.sp[data-sheet],.sp[data-own]').forEach(i=>{ io?io.observe(i):loadSprite(i); }); }
 
 /* ---------- bits ---------- */
 function stars(r){ return r>0 ? `<span class="st" role="img" aria-label="${r} out of 5">★★★★★<i style="width:${r/5*100}%">★★★★★</i></span><span class="num">${r%1?r.toFixed(2).replace(/0$/,''):r.toFixed(1)}</span>` : `<span class="unr">Unrated</span>`; }
