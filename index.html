@@ -119,6 +119,7 @@ td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 /* stats */
 .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:6px}
 .sgrid .span4{grid-column:1/-1}
+.kpis{margin:0 0 22px}
 .sgrid .span2{grid-column:span 2}
 .sc{position:relative;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:22px 24px 24px;transition:box-shadow .3s,transform .3s,border-color .3s}
 .sc:hover{box-shadow:var(--glow);transform:translateY(-3px);border-color:rgba(242,200,121,.5)}
@@ -184,6 +185,7 @@ svg text{font:12px var(--sans);fill:var(--mute)}
 </div><svg id="vh" aria-hidden="true"></svg></header>
 
 <main>
+  <div class="sgrid kpis" id="kpis" aria-label="Reading totals"></div>
   <div class="bar" id="bar">
     <input type="search" id="q" placeholder="Search title, author, series, review" aria-label="Search">
     <select id="genre" aria-label="Genre"></select>
@@ -200,7 +202,6 @@ svg text{font:12px var(--sans);fill:var(--mute)}
     <div class="seg" id="views" role="group" aria-label="View">
       <button data-v="grid" aria-pressed="true">Shelves</button><button data-v="list" aria-pressed="false">List</button><button data-v="table" aria-pressed="false">Table</button>
     </div>
-    <label class="chk"><input type="checkbox" id="kids"> Include childhood series</label>
     <label class="chk"><input type="checkbox" id="noex"> Hide explicit</label>
   </div>
 
@@ -225,7 +226,7 @@ const PPH = 35; // narrated pages per hour, used only until real Audible runtime
 const GC = {"High Fantasy":"#3B4F6B","Fantasy Adventure":"#7A5C2E","Romantasy":"#8A3F55","Contemporary Fantasy":"#5B4A78","Sci-Fi":"#2E6670","Dystopian":"#5A5F63","LitRPG":"#8F4B2A","Mystery":"#3F3F58","Horror":"#6E2A2A","Contemporary Fiction":"#4F6B52","Classics":"#6B5A3C","Nonfiction":"#46606E","Poetry":"#805B7A","Mythological Retellings":"#85692B","Romance":"#9B3D4A"};
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const S = {view:'grid', sort:'recent', dir:1, q:'', genre:'', aud:'', shelf:'read', kids:false, noex:false};
+const S = {view:'grid', sort:'recent', dir:1, q:'', genre:'', aud:'', shelf:'read', noex:false};
 const byId = Object.fromEntries(BOOKS.map(b=>[b.id,b]));
 const fmtDate = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return new Date(+y,+m-1,+dd||1).toLocaleDateString('en-US',{month:'short',day:dd?'numeric':undefined,year:'numeric'}); };
 
@@ -297,7 +298,6 @@ function hideTip(){ tip.style.display='none'; }
 function visible(){
   const q = S.q.trim().toLowerCase();
   return BOOKS.filter(b=>{
-    if(!S.kids && b.h) return false;
     if(S.noex && b.x) return false;
     if(S.shelf!=='all' && b.sh!==S.shelf) return false;
     if(S.genre && b.g!==S.genre) return false;
@@ -306,9 +306,12 @@ function visible(){
     return true;
   });
 }
+/* ties on the same date: keep a series together and shelve it last book first */
+const num = v => { const n=parseFloat(v); return isNaN(n)?-1:n; };
+const tie = (a,b)=> (a.se||a.t).localeCompare(b.se||b.t) || num(b.sn)-num(a.sn) || a.t.localeCompare(b.t);
 const cmp = {
-  recent:(a,b)=> (b.dr||'').localeCompare(a.dr||'') || (b.dr?0:(b.da||'').localeCompare(a.da||'')) || a.t.localeCompare(b.t),
-  added:(a,b)=> (b.da||'').localeCompare(a.da||'') || a.t.localeCompare(b.t),
+  recent:(a,b)=> (b.dr||'').localeCompare(a.dr||'') || (b.dr?0:(b.da||'').localeCompare(a.da||'')) || tie(a,b),
+  added:(a,b)=> (b.da||'').localeCompare(a.da||'') || tie(a,b),
   rating:(a,b)=> b.r-a.r || a.t.localeCompare(b.t),
   title:(a,b)=> a.t.localeCompare(b.t),
   author:(a,b)=> a.a.localeCompare(b.a) || a.t.localeCompare(b.t),
@@ -357,8 +360,19 @@ function closeBook(){ $('#scrim').classList.remove('on'); }
 /* ---------- stats ---------- */
 function hbars(rows){ const max=Math.max(...rows.map(r=>r[1]),1);
   return '<div class="hb">'+rows.map(([l,v])=>`<div class="r" data-t="${esc(l+': '+v)}"><div class="lab" title="${esc(l)}">${esc(l)}</div><div class="trk"><div class="bar2" style="width:${v/max*100}%"></div></div><div class="v">${v}</div></div>`).join('')+'</div>'; }
+function kpiCards(rd,rated,pages){
+  const avg = rated.reduce((s,b)=>s+b.r,0)/(rated.length||1);
+  return `<div class="sc k"><b>${rd.length.toLocaleString()}</b><span>books read</span></div>
+    <div class="sc k"><b>${pages.toLocaleString()}</b><span>pages read</span></div>
+    <div class="sc k"><b>${Math.round(pages/PPH).toLocaleString()}</b><span>hours, estimated from pages</span></div>
+    <div class="sc k"><b>${avg.toFixed(2)}</b><span>average rating, ${rated.length} rated</span></div>`;
+}
+function renderKpis(){
+  const rd = BOOKS.filter(b=>b.sh==='read'), rated = rd.filter(b=>b.r>0), pages = rd.reduce((s,b)=>s+b.p,0);
+  $('#kpis').innerHTML = kpiCards(rd,rated,pages);
+}
 function renderStats(){
-  const rd = BOOKS.filter(b=>b.sh==='read' && (S.kids||!b.h));
+  const rd = BOOKS.filter(b=>b.sh==='read');
   const pages = rd.reduce((s,b)=>s+b.p,0), rated = rd.filter(b=>b.r>0);
   const avg = rated.reduce((s,b)=>s+b.r,0)/(rated.length||1);
   const noPages = rd.filter(b=>!b.p).length;
@@ -394,10 +408,7 @@ function renderStats(){
   </ul>`;
   $('#stats').innerHTML = `
   <div class="sgrid">
-    <div class="sc k"><b>${rd.length.toLocaleString()}</b><span>books read</span></div>
-    <div class="sc k"><b>${pages.toLocaleString()}</b><span>pages read</span></div>
-    <div class="sc k"><b>${Math.round(pages/PPH).toLocaleString()}</b><span>hours, estimated from pages</span></div>
-    <div class="sc k"><b>${avg.toFixed(2)}</b><span>average rating, ${rated.length} rated</span></div>
+    ${kpiCards(rd,rated,pages)}
     <div class="sc span4"><h2>Books per year</h2><p class="cap">Counted from finish dates, 2017 on. Only ${dated} of ${rd.length} books carry a finish date; earlier ones were added in bulk, so the true pace is higher than this chart shows.</p>${svg}</div>
     <div class="sc span2"><h2>Genres</h2><p class="cap">What the shelves are made of.</p>${hbars(gg)}</div>
     <div class="sc span2"><h2>Most-read authors</h2><p class="cap">By number of books.</p>${hbars(au)}</div>
@@ -421,7 +432,6 @@ function init(){
   $('#q').oninput = e=>{ S.q=e.target.value; render(); };
   ['genre','aud','shelf'].forEach(k=>$('#'+k).onchange=e=>{ S[k]=e.target.value; render(); });
   $('#sort').onchange = e=>{ S.sort=e.target.value; S.dir=1; render(); };
-  $('#kids').onchange = e=>{ S.kids=e.target.checked; render(); if(!$('#stats').classList.contains('hid')) renderStats(); };
   $('#noex').onchange = e=>{ S.noex=e.target.checked; render(); };
   $('#views').onclick = e=>{ const v=e.target.dataset.v; if(!v) return; S.view=v; document.querySelectorAll('#views button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===v)); render(); };
   const out=$('#out');
@@ -440,14 +450,15 @@ function init(){
   addEventListener('hashchange',()=>go(location.hash.slice(1)||'shelves',true));
   let rt; addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{ if(!$('#shelves').classList.contains('hid')) render(); else updateVines(); },160); });
   if('ResizeObserver' in window) new ResizeObserver(()=>{ clearTimeout(window._vt); window._vt=setTimeout(updateVines,120); }).observe($('#case'));
+  renderKpis();
   go(location.hash.slice(1)||'shelves',true);
   fetch('data/extra.json').then(r=>r.ok?r.json():null).then(j=>{ if(!j) return; EX=j.b||{}; if(cur){ $('#now').querySelector('div').innerHTML=coverHTML(cur); observeCovers($('#now')); } if(!$('#shelves').classList.contains('hid')) render(); }).catch(()=>{});
 }
 function go(p,fromHash){
   if(p!=='stats') p='shelves';
-  $('#shelves').classList.toggle('hid',p!=='shelves'); $('#bar').classList.toggle('hid',p!=='shelves'); $('#stats').classList.toggle('hid',p!=='stats');
+  $('#shelves').classList.toggle('hid',p!=='shelves'); $('#bar').classList.toggle('hid',p!=='shelves'); $('#kpis').classList.toggle('hid',p!=='shelves'); $('#stats').classList.toggle('hid',p!=='stats');
   $('#tab-shelves').setAttribute('aria-selected',p==='shelves'); $('#tab-stats').setAttribute('aria-selected',p==='stats');
-  if(!fromHash) { try{ location.hash=p; }catch(e){} }
+  if(!fromHash) { try{ history.pushState(null,'','#'+p); }catch(e){} }
   if(p==='stats'){ renderStats(); updateVines(); } else render();
 }
 init();
