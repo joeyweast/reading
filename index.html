@@ -30,11 +30,16 @@ a{color:inherit}
 .mast p.sub{margin:10px 0 0;color:var(--mute);white-space:nowrap}
 @media (max-width:700px){.mast p.sub{white-space:normal}}
 .mast-top{display:flex;gap:28px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
-.slip{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);padding:12px 18px 12px 12px;border-radius:10px;max-width:420px;cursor:pointer;text-align:left;transition:box-shadow .25s,transform .25s}
+.slip{display:flex;gap:14px;align-items:center;justify-content:center;width:100%;margin:10px 0 22px;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);padding:9px 18px;border-radius:12px;cursor:pointer;text-align:left;transition:box-shadow .25s,transform .25s}.slip{position:relative;flex-direction:column;gap:0;padding:38px 24px 22px;margin-top:24px;z-index:5}
+.slip .sl-row{display:flex;gap:26px;align-items:center;justify-content:center}
+.slip .sl-row>div:first-child{width:84px;flex:none}
+.slip .sl-txt b{display:block;font-size:28px;line-height:1.2}.slip .sl-txt small{display:block;font-size:19px;margin-top:4px}.slip .sl-txt i{font-style:italic}
+.slip .tag{position:absolute;top:-15px;left:-9px;right:-9px;height:34px;display:flex;align-items:center;justify-content:center;margin:0;background:linear-gradient(#F6D98E,#E0AE4C 55%,#C48F2E);color:#2A1D07;font:700 17px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;box-shadow:0 3px 8px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.45);border-radius:3px}
+.slip .tag:before,.slip .tag:after{content:"";position:absolute;bottom:-9px;border:5px solid transparent;border-top-color:#8A5F18;border-bottom:0}
+.slip .tag:before{left:0;border-left-width:9px;border-right:0}.slip .tag:after{right:0;border-right-width:9px;border-left:0}
 .slip:hover{box-shadow:var(--glow);transform:translateY(-2px)}
 .slip b{font:700 16px/1.25 var(--serif);display:block}
 .slip small{display:block;color:var(--mute)}
-.slip .tag{font:600 13px var(--sans);color:var(--amber);margin-bottom:3px;display:block}
 .tabs{display:flex;gap:8px;margin:26px 0 0;justify-content:center}
 .tabs button{position:relative;min-width:132px;background:linear-gradient(#2E3764,#222A4E);border:1px solid #3C4778;border-bottom:0;border-radius:11px 11px 0 0;color:var(--mute);padding:11px 22px 13px;font:700 16px var(--sans);cursor:pointer;margin-bottom:-3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 -3px 10px rgba(0,0,0,.35);transition:color .2s,transform .2s,box-shadow .2s}
 .tabs button[aria-selected=true]{color:var(--amber);background:linear-gradient(#3B4680,#2A3463);border-color:rgba(242,200,121,.5);padding-bottom:16px;transform:translateY(-3px);box-shadow:inset 0 1px 0 rgba(242,200,121,.35),0 -4px 14px rgba(0,0,0,.4),0 0 18px rgba(242,200,121,.12)}
@@ -174,6 +179,18 @@ svg text{font:12px var(--sans);fill:var(--mute)}
   .dlg{grid-template-columns:1fr}.dlg .cv{max-width:150px}
   .row{grid-template-columns:48px 1fr}.row .meta{grid-column:2;text-align:left}
   .sgrid{grid-template-columns:1fr}.sgrid .span2{grid-column:1/-1}
+  main{padding:62px 20px 80px}
+  .slip,.bar,.sgrid.kpis{margin-left:-2px;margin-right:-2px;width:calc(100% + 4px)}
+  .slip{padding:24px 14px 10px;margin:22px -2px 16px}.slip .tag{font-size:12.5px;height:26px;top:-13px;letter-spacing:.16em}.slip .sl-row{gap:14px}.slip .sl-row>div:first-child{width:36px}.slip .sl-txt b{font-size:15px}.slip .sl-txt small{font-size:14px;margin-top:0}.slip b{font-size:15px}
+  .sgrid.kpis{grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+  .sgrid.kpis .sc,.sgrid.kpis .sc:last-child{grid-column:span 2;padding:12px 4px;border-radius:10px}
+  .sgrid.kpis .sc:nth-child(n+4){grid-column:span 3}
+  .sgrid.kpis .sc.k b,.kpis .sc.k b{font-size:24px}.sgrid.kpis .sc.k span{font-size:12px}
+  .sc:hover{transform:none}
+  .bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0}
+  .bar input[type=search]{grid-column:1/-1;width:100%;min-width:0}
+  .bar select{width:100%;min-width:0;text-overflow:ellipsis}
+  .seg{grid-column:1/-1;width:100%}.seg button{flex:1;padding:9px 6px}
   .case{padding:0 26px}.plank{margin:0 -26px}.case .up{width:20px}.case .vs{width:70px}.case .vs.l{left:-26px}.case .vs.r{right:-26px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -189,7 +206,6 @@ svg text{font:12px var(--sans);fill:var(--mute)}
       <h1>Joey's Reading Room</h1>
       <p class="sub" id="sub"></p>
     </div>
-    <button class="slip hid" id="now" aria-label="Currently reading"></button>
   </div>
   <div class="tabs" role="tablist">
     <button role="tab" id="tab-shelves" aria-selected="true">Shelves</button>
@@ -198,6 +214,7 @@ svg text{font:12px var(--sans);fill:var(--mute)}
 </div><svg id="vh" aria-hidden="true"></svg></header>
 
 <main>
+  <button class="slip hid" id="now" aria-label="Currently reading"></button>
   <div class="sgrid kpis" id="kpis" aria-label="Reading totals"></div>
   <div class="bar" id="bar">
     <input type="search" id="q" placeholder="Search title, author, series, review" aria-label="Search">
@@ -452,7 +469,7 @@ function init(){
   const n = BOOKS.filter(b=>b.sh==='read').length;
   $('#sub').textContent = `Heists, magic systems, and morally grey heroes. Everything I've read, shelved and rated.`;
   const cur = BOOKS.find(b=>b.sh==='currently-reading');
-  if(cur){ const nw=$('#now'); nw.classList.remove('hid'); nw.innerHTML = `<div style="width:58px;flex:none">${coverHTML(cur)}</div><div><span class="tag">Now reading</span><b>${esc(cur.t)}</b><small>${esc(cur.a)}</small>${cur.se?`<small>${esc(serTxt(cur))}</small>`:''}</div>`; nw.onclick=()=>openBook(cur.id); observeCovers(nw); }
+  if(cur){ const nw=$('#now'); nw.classList.remove('hid'); nw.innerHTML = `<span class="tag">Now reading</span><div class="sl-row"><div>${coverHTML(cur)}</div><div class="sl-txt"><b>${esc(cur.t)}</b><small>${esc(cur.a)}${cur.se?` | <i>${esc(serTxt(cur))}</i>`:''}</small></div></div>`; nw.onclick=()=>openBook(cur.id); observeCovers(nw); }
   $('#q').oninput = e=>{ S.q=e.target.value; render(); };
   ['genre','aud','shelf'].forEach(k=>$('#'+k).onchange=e=>{ S[k]=e.target.value; render(); });
   $('#sort').onchange = e=>{ S.sort=e.target.value; S.dir=1; render(); };
