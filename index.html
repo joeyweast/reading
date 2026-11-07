@@ -492,7 +492,7 @@ function init(){
   if('ResizeObserver' in window) new ResizeObserver(()=>{ clearTimeout(window._vt); window._vt=setTimeout(updateVines,120); }).observe($('#case'));
   renderKpis();
   go(location.hash.slice(1)||'shelves',true);
-  fetch('data/extra.json').then(r=>r.ok?r.json():null).then(j=>{ if(!j) return; EX=Object.assign({}, j.b||{}, ADDED); if(cur){ $('#now').querySelector('div').innerHTML=coverHTML(cur); observeCovers($('#now')); } if(!$('#shelves').classList.contains('hid')) render(); }).catch(()=>{});
+  fetch('data/extra.json').then(r=>r.ok?r.json():null).then(j=>{ if(!j) return; EX=Object.assign({}, j.b||{}, ADDED); if(cur){ $('#now .sl-row>div').innerHTML=coverHTML(cur); observeCovers($('#now')); } if(!$('#shelves').classList.contains('hid')) render(); }).catch(()=>{});
 }
 function go(p,fromHash){
   if(p!=='stats') p='shelves';
