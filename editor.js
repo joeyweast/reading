@@ -165,10 +165,6 @@ async function save(ops,covers,message,removes){
 /* ---------- styles ---------- */
 const css=document.createElement('style');
 css.textContent=`
-#rrbar{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;gap:8px;align-items:center;background:#0d1d24;border:1px solid rgba(244,230,202,.25);border-radius:999px;padding:6px 8px 6px 14px;color:#F4E6CA;font:500 13px var(--sans,sans-serif)}
-#rrbar .m{color:#E8B85F}
-#rrbar button{border:1px solid rgba(244,230,202,.35);background:transparent;color:#F4E6CA;border-radius:999px;padding:7px 14px;font:500 13px var(--sans,sans-serif);cursor:pointer}
-#rrbar button:hover,#rrbar button:focus-visible{background:rgba(244,230,202,.12)}
 #rrmask{position:fixed;inset:0;z-index:80;background:rgba(4,12,16,.72);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
 #rrmask.on{display:flex}
 #rrform{width:min(760px,100%);background:#142C35;border:1px solid rgba(244,230,202,.2);border-radius:16px;padding:22px;color:#F4E6CA;font:15px/1.45 var(--sans,sans-serif)}
@@ -376,11 +372,8 @@ async function doDelete(){
     closeForm();setTimeout(()=>location.reload(),600);
   }catch(e){F.err=e.message;F.confirmDel=false;render()}
 }
-/* ---------- chrome: owner bar, edit button in the drawer ---------- */
+/* ---------- chrome: form mask, edit button in the drawer (Add a book lives in Settings) ---------- */
 function bar(){
-  const d=document.createElement('div');d.id='rrbar';
-  d.innerHTML='<span class="m">'+(OWN.dry?'Dry run':'Owner')+'</span><button id="rr_add" type="button">Add a book</button>';
-  document.body.appendChild(d);q('#rr_add').onclick=()=>openForm(null);
   const m=document.createElement('div');m.id='rrmask';m.innerHTML='<div id="rrform" role="dialog" aria-modal="true" aria-label="Edit book"></div>';
   document.body.appendChild(m);
   m.addEventListener('mousedown',e=>{if(e.target===m)closeForm()});

@@ -190,7 +190,7 @@ table.dq td:last-child{text-align:right;font-weight:600;color:var(--gold)}
 .uni.has .legend{display:none}
 .why{position:absolute;left:16px;bottom:18px;z-index:6;width:min(350px,calc(100% - 32px));max-height:min(60%,560px);overflow:auto;padding:14px 16px 16px;background:rgba(8,19,27,.96)}
 .why[hidden]{display:none}
-body:has(#rrbar) .legend,body:has(#rrbar) .why{bottom:72px}
+
 .why .wx{position:absolute;top:6px;right:6px;width:44px;height:44px;border-radius:12px;font-size:22px;color:var(--muted);background:none;border:0}
 .why .wt{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:600;line-height:1.15;padding-right:44px}
 .why .ws{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px;margin:4px 0 2px}.why .ws span:last-child{min-width:0}
@@ -203,7 +203,7 @@ body:has(#rrbar) .legend,body:has(#rrbar) .why{bottom:72px}
 .why .wrow b{display:block;font-weight:600;font-size:13.5px;line-height:1.25}.why .wrow small{display:flex;gap:4px;flex-wrap:wrap;color:var(--muted);font-size:12px}
 .why .wrow small i{font-style:normal;border:1px dashed rgba(244,230,202,.3);border-radius:999px;padding:0 7px;line-height:18px}
 .why .wmore{background:none;border:0;color:var(--gold);font-size:13px;min-height:36px;padding:0 6px}
-@media (max-width:860px){body:has(#rrbar) .why{bottom:66px}.gjump{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px}.gjump .chip{flex:none}.uni.sh .gjump{display:none}.why{left:10px;right:70px;width:auto;bottom:10px;max-height:44%}.uni.sh .why{display:none}}
+@media (max-width:860px){.gjump{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px}.gjump .chip{flex:none}.uni.sh .gjump{display:none}.why{left:10px;right:70px;width:auto;bottom:10px;max-height:44%}.uni.sh .why{display:none}}
 .zoomc{position:absolute;right:16px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:8px}
 .zoomc button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(8,19,27,.92);font-size:22px}
 .legend{position:absolute;left:16px;bottom:18px;z-index:5;padding:12px 14px;font-size:12.5px;color:var(--muted);max-width:320px}
@@ -538,9 +538,10 @@ function initPrefs(){
  </div>
  <p class="note" style="margin-top:16px;max-width:60ch">Settings are remembered on this device only.</p>
  <div class="panel card" style="margin-top:28px;max-width:720px"><b>Owner access</b>
- <div class="note" style="margin:6px 0 12px">For the site owner. Adds an “Add a book” button and an “Edit this book” button. The key is kept in this browser only.</div>
- <div id="own">${localStorage.getItem('rr-token')||localStorage.getItem('rr-dry')?'<div class="note" style="margin-bottom:10px">'+(localStorage.getItem('rr-token')?'Unlocked on this device.':'Practice mode is on: edits stay in this browser and nothing is sent to GitHub.')+'</div><button class="btn ghost" id="ownlock" type="button">Lock this device</button>':'<label class="note" for="owntok" style="display:block;margin-bottom:6px">GitHub access token</label><input type="password" id="owntok" autocomplete="off" style="width:100%;box-sizing:border-box;background:#0d1d24;color:#F4E6CA;border:1px solid rgba(244,230,202,.25);border-radius:10px;padding:9px 11px;font:15px sans-serif"><div style="margin-top:10px"><button class="btn" id="ownok" type="button">Unlock</button> <button class="btn ghost" id="owndry" type="button">Try practice mode</button></div>'}<div class="note" id="ownmsg" style="margin-top:8px"></div></div></div>`;
- {const ok=$('#ownok'),lk=$('#ownlock');
+ <div class="note" style="margin:6px 0 12px">For the site owner. Adds an “Add a book” button here and an “Edit this book” button on each book. The key is kept in this browser only.</div>
+ <div id="own">${localStorage.getItem('rr-token')||localStorage.getItem('rr-dry')?'<div class="note" style="margin-bottom:10px">'+(localStorage.getItem('rr-token')?'Unlocked on this device.':'Practice mode is on: edits stay in this browser and nothing is sent to GitHub.')+'</div><button class="btn" id="owadd" type="button">Add a book</button> <button class="btn ghost" id="ownlock" type="button">Lock this device</button>':'<label class="note" for="owntok" style="display:block;margin-bottom:6px">GitHub access token</label><input type="password" id="owntok" autocomplete="off" style="width:100%;box-sizing:border-box;background:#0d1d24;color:#F4E6CA;border:1px solid rgba(244,230,202,.25);border-radius:10px;padding:9px 11px;font:15px sans-serif"><div style="margin-top:10px"><button class="btn" id="ownok" type="button">Unlock</button> <button class="btn ghost" id="owndry" type="button">Try practice mode</button></div>'}<div class="note" id="ownmsg" style="margin-top:8px"></div></div></div>`;
+ {const ok=$('#ownok'),lk=$('#ownlock'),ad=$('#owadd');
+  if(ad)ad.onclick=()=>{if(window.RR_EDITOR)window.RR_EDITOR.openForm(null);else $('#ownmsg').textContent='The editor is still loading, try again in a moment.'};
   if(ok)ok.onclick=()=>{const t=$('#owntok').value.trim();if(!/^(github_pat_|ghp_)[A-Za-z0-9_]{20,}$/.test(t)){$('#ownmsg').textContent='That does not look like a GitHub token.';return}localStorage.setItem('rr-token',t);location.reload()};
   const dr=$('#owndry');if(dr)dr.onclick=()=>{localStorage.setItem('rr-dry','1');location.reload()};
   if(lk)lk.onclick=()=>{['rr-token','rr-dry'].forEach(k=>localStorage.removeItem(k));location.reload()}}
