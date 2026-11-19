@@ -84,7 +84,7 @@ button.cvb:hover .cv{transform:translateY(-4px);box-shadow:0 12px 20px rgba(0,0,
 .mason{column-count:3;column-gap:18px}@media (max-width:1000px){.mason{column-count:2}}@media (max-width:640px){.mason{column-count:1}}.mason>.panel{break-inside:avoid;margin-bottom:18px;display:inline-block;width:100%}
 .prose.pb{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:14px}.pcol h3{font:600 26px/1.1 var(--serif);color:var(--gold);margin:0 0 8px}.pcol p{margin:0;color:#d8d3c4;font:400 18px/1.6 var(--serif)}
 @media (max-width:900px){.prose.pb{grid-template-columns:1fr;gap:20px}}
-.hero .htext,.hero .now{position:relative;z-index:2}
+.hero .htext,.hero .now,.hero .ncar{position:relative;z-index:2}
 .hero .htext{width:max-content;max-width:100%}.hero .htext h1{white-space:nowrap}.hero .htext p.lead{width:0;min-width:100%;max-width:none}
 .hero{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);min-height:380px;display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:center;padding:44px 44px;
 background:linear-gradient(90deg,rgba(8,19,27,.94) 0,rgba(8,19,27,.7) 52%,rgba(8,19,27,.28)),url(data/library.webp) center 38%/cover}
@@ -96,6 +96,18 @@ background:linear-gradient(90deg,rgba(8,19,27,.94) 0,rgba(8,19,27,.7) 52%,rgba(8
 .now h2{font-size:28px;margin:6px 0 4px}
 .now .by{color:var(--muted);font-size:15px}
 .now .by i{color:var(--cream)}
+.ncar{min-width:0}.nstage{display:grid}
+.nslide{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .55s ease,visibility .55s}
+.nslide.on{opacity:1;visibility:visible}
+.nctl{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px}
+.nctl button{background:rgba(8,19,27,.72);border:1px solid rgba(232,184,95,.4);color:var(--gold);border-radius:999px;min-width:36px;height:36px;padding:0 10px;font:600 16px/1 var(--sans);cursor:pointer}
+.nctl button:hover{background:rgba(232,184,95,.16)}
+.nctl button:focus-visible,.ndot:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.ndots{display:flex;gap:4px;align-items:center}
+.nctl .ndot{min-width:0;width:26px;height:26px;padding:0;border:0;background:none;display:grid;place-items:center}
+.nctl .ndot::before{content:"";width:9px;height:9px;border-radius:50%;border:1px solid var(--gold);background:transparent}
+.nctl .ndot.on::before{background:var(--gold)}
+.nctl .npause{font-size:12px;letter-spacing:1px}
 .pill{display:inline-block;padding:2px 10px;border-radius:999px;background:rgba(232,184,95,.14);color:var(--gold);font-size:12px;font-weight:600;border:1px solid rgba(232,184,95,.35)}
 .statstrip{display:grid;grid-template-columns:repeat(5,1fr);margin:30px 0 12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(8,19,27,.6)}
 .statstrip div{padding:20px 16px;text-align:center;border-left:1px solid var(--line)}
@@ -299,7 +311,7 @@ table.dq td:last-child{text-align:right;font-weight:600;color:var(--gold)}
  .hero .htext{padding-top:6px}
  .hero .btn{min-height:44px;padding:0 16px;font-size:14px}
  .hero div[style*='margin-top:22px']{margin-top:14px!important}
- .now{padding:12px;gap:14px}.now .cv{width:68px}.now h2{font-size:22px}
+ .now{padding:12px;gap:14px}.now .cv{width:68px}.now h2{font-size:22px}.nctl{margin-top:8px}
  .statstrip{display:flex;overflow-x:auto;scroll-snap-type:x proximity}
  .statstrip div{flex:0 0 38%;scroll-snap-align:start;padding:14px 8px}
  .statstrip b{font-size:34px}
@@ -450,12 +462,16 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#drawer').classList.conta
 
 /* ========== HOME ========== */
 function initHome(){
- const cur=LIB.find(b=>b.sh==='currently-reading');
+ const curs=LIB.filter(b=>b.sh==='currently-reading'),cur=curs[0];
+ const nowBtn=c=>`<button class="now" data-id="${c.id}" aria-label="Open details for ${esc(c.t)}">${cv(c)}<div><span class="pill">Currently reading</span><h2>${esc(c.t)}</h2><div class="by">${esc(c.a)}${c.se?` &nbsp;|&nbsp; <i>${esc(serTxt(c))}</i>`:''}</div></div></button>`;
+ const nowHtml=curs.length>1
+  ?`<div class="ncar" role="group" aria-roledescription="carousel" aria-label="Currently reading, ${curs.length} books"><div class="nstage">${curs.map((c,k)=>`<div class="nslide${k?'':' on'}" role="group" aria-roledescription="slide" aria-label="${k+1} of ${curs.length}"${k?' inert':''}>${nowBtn(c)}</div>`).join('')}</div><div class="nctl"><button type="button" class="nprev" aria-label="Previous book">&#8249;</button><div class="ndots">${curs.map((c,k)=>`<button type="button" class="ndot${k?'':' on'}" data-k="${k}" aria-label="Show book ${k+1} of ${curs.length}"${k?'':' aria-current="true"'}></button>`).join('')}</div><button type="button" class="nnext" aria-label="Next book">&#8250;</button><button type="button" class="npause" aria-label="Pause rotation">&#10074;&#10074;</button></div></div>`
+  :cur?nowBtn(cur):`<div class="now"><div><span class="pill">Nothing on the nightstand</span><h2>No current book</h2><div class="by">Mark a book as currently reading in Goodreads and it will appear here.</div></div></div>`;
  const authors=new Set(READ.map(b=>b.a)).size,pages=READ.reduce((s,b)=>s+b.p,0),rated=READ.filter(b=>b.r>0),avg=rated.reduce((s,b)=>s+b.r,0)/rated.length;
  const recent=REL.slice().sort((a,b)=>b.dr.localeCompare(a.dr)||a.t.localeCompare(b.t)).slice(0,16);
  $('#v-home').innerHTML=`
  <div class="hero"><div class="htext"><h1>Reading, Collected.</h1><p class="lead">A personal archive of books, ratings, and reading history.</p>  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px"><a class="btn" href="#universe">Enter the Universe</a><a class="btn ghost" href="#yearbook">Open the Yearbook</a></div></div>
-  <div>${cur?`<button class="now" data-id="${cur.id}" aria-label="Open details for ${esc(cur.t)}">${cv(cur)}<div><span class="pill">Currently reading</span><h2>${esc(cur.t)}</h2><div class="by">${esc(cur.a)}${cur.se?` &nbsp;|&nbsp; <i>${esc(serTxt(cur))}</i>`:''}</div></div></button>`:`<div class="now"><div><span class="pill">Nothing on the nightstand</span><h2>No current book</h2><div class="by">Mark a book as currently reading in Goodreads and it will appear here.</div></div></div>`}</div></div>
+  <div>${nowHtml}</div></div>
  <div class="statstrip" role="list">
   <div role="listitem"><b>${num(READ.length)}</b><span>books read</span></div>
   <div role="listitem"><b>${num(authors)}</b><span>authors read</span></div>
@@ -465,7 +481,23 @@ function initHome(){
   <div class="sec-h"><div><div class="eyebrow">Recently finished</div><h2>The latest on the shelf</h2></div><a class="btn ghost" href="#shelves">Browse all shelves</a></div>
  <div class="shelfwrap"><div class="shelf" tabindex="0" aria-label="Recently finished books, scroll sideways"><div class="row">${recent.map(b=>`<button class="cvb" data-id="${b.id}" aria-label="${esc(b.t)}">${cv(b)}<div class="cap">${esc(b.t.length>34?b.t.slice(0,32)+'…':b.t)}</div></button>`).join('')}</div></div></div>`;
  $$('#v-home [data-id]').forEach(e=>e.onclick=()=>openDetail(e.dataset.id));
+ if(NOW_T){clearInterval(NOW_T);NOW_T=0}
+ if(curs.length>1){
+  const car=$('#v-home .ncar'),sl=$$('#v-home .nslide'),dots=$$('#v-home .ndot'),pb=$('#v-home .npause');
+  let i=0,paused=false,hold=false;
+  const go=n=>{i=(n+sl.length)%sl.length;sl.forEach((x,k)=>{x.classList.toggle('on',k===i);if(k===i)x.removeAttribute('inert');else x.setAttribute('inert','')});dots.forEach((d,k)=>{d.classList.toggle('on',k===i);if(k===i)d.setAttribute('aria-current','true');else d.removeAttribute('aria-current')})};
+  $('#v-home .nprev').onclick=()=>go(i-1);$('#v-home .nnext').onclick=()=>go(i+1);
+  dots.forEach(d=>d.onclick=()=>go(+d.dataset.k));
+  pb.onclick=()=>{paused=!paused;pb.innerHTML=paused?'&#9654;':'&#10074;&#10074;';pb.setAttribute('aria-label',paused?'Resume rotation':'Pause rotation')};
+  car.addEventListener('mouseenter',()=>hold=true);car.addEventListener('mouseleave',()=>hold=false);
+  car.addEventListener('focusin',()=>hold=true);car.addEventListener('focusout',()=>hold=false);
+  car.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(i-1);else if(e.key==='ArrowRight')go(i+1)});
+  let tx=null;car.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  car.addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>40)go(i+(dx<0?1:-1))},{passive:true});
+  NOW_T=setInterval(()=>{if(!paused&&!hold&&!reduced()&&!document.hidden&&car.getClientRects().length)go(i+1)},7000);
+ }
 }
+let NOW_T=0;
 
 
 /* ========== SHELVES ========== */
